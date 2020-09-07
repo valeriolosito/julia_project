@@ -1,11 +1,10 @@
 push!(LOAD_PATH,"../src/")
 
-using Documenter, SuiteSparseGraphBLAS
+using Documenter
 
 makedocs(
-    modules     = [MatrixSuiteSparseGraphBLAS],
     format      = Documenter.HTML(),
-    sitename    = "MatrixSuiteSparseGraphBLAS",
+    sitename    = "Progetto",
     doctest     = false,
     pages       = Any[
 		"Home"								=> "index.md",
