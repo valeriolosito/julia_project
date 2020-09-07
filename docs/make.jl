@@ -14,5 +14,5 @@ makedocs(
 )
 
 deploydocs(
-    repo = "github.com/valeriolosito/julia_project/MatrixSuiteSparseGraphBLAS.jl.git",
+    repo = "github.com/valeriolosito/julia_project.git",
 )
