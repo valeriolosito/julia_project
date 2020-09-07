@@ -1,8 +1,8 @@
-push!(LOAD_PATH,"../src/")
-
 using Documenter
 
 makedocs(
+    root 	= "./",
+    source	= "src",
     format      = Documenter.HTML(),
     sitename    = "Progetto",
     doctest     = false,
