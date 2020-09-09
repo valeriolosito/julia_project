@@ -1,6 +1,6 @@
 using Documenter, Example
 
-makedocs()
+makedocs(sitename = "My Documentation")
 deploydocs(
-    repo = "github.com/valeriolosito/Example.jl.git",
+   repo = "github.com/valeriolosito/Example.jl.git",
 )
