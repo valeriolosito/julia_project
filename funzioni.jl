@@ -1,4 +1,5 @@
 module Funzioni
+using SuiteSparseGraphBLAS, LinearAlgebra
 
 export createM2
 
@@ -61,7 +62,12 @@ export createM2
   
   function createM1(list)
    #Massimo -> va definita la matrice matrix
+   
+   #controllare lunghezza di tutti gli elementi di list
+      
    size = length(list)
+   vectorEdges = Any[]
+
    for i in 1:size-1
     currentList = list[i]
     for j in i+1: size
@@ -69,14 +75,79 @@ export createM2
      sumVector = sumBetweenList(currentList, nextList)
      if (2 in sumVector)
       edge = createEdge(sumVector)
-      println("Edge da inserire", edge)
+      push!(vectorEdges, edge)
+      #println("Edge da inserire", edge)
+      
       #Massimo -> va inserito edge in matrix
+      #println("Vector Edge Parziale --> ", vectorEdges)
      end
     end
    end
+
+   matrix = zeros(Int64, length(vectorEdges), length(vectorEdges[1]))
+   for i in 1:length(vectorEdges)
+   	matrix[i, :] = vectorEdges[i]
+   end
+
+   println("Matrix Finale --> ", matrix)
+   println("-------FINE-----METODO----CREATE------M1------")
+   return matrix
   end
   
+  # M1 è la matrice degli spigoli
+  function getMatrixVV(M1)
+  	transposeM1 = transpose(M1)
+ 	result = emult(transposeM1, M1, operator = Binaryop.PLUS)
+ 	return result
+  end
   
+  # M1 è la matrice degli spigoli
+  function getMatrixVE(M1) 
+ 	return transpose(M1)
+  end
+  
+  # M2 è la matrice delle facce
+  function getMatrixVF(M2) 
+ 	return transpose(M2)
+  end
+  
+  # M1 è la matrice degli spigoli
+  function getMatrixEV(M1) 
+ 	return M1
+  end
+  
+  # M1 è la matrice degli spigoli
+  function getMatrixEE(M1)
+ 	transposeM1 = transpose(M1)
+ 	result = emult(M1, transposeM1, operator = Binaryop.PLUS)
+ 	return result
+  end
+  
+  # M1 è la matrice degli spigoli, M2 è la matrice delle facce
+  function getMatrixEF(M1,M2)
+ 	transposeM2 = transpose(M2)
+ 	result = emult(M1, transposeM2, operator = Binaryop.PLUS)
+ 	return result
+  end
+
+  # M2 è la matrice delle facce
+  function getMatrixFV(M2)
+ 	return M2
+  end
+
+  # M1 è la matrice degli spigoli, M2 è la matrice delle facce
+  function getMatrixFE(M1,M2)
+ 	transposeM1 = transpose(M1)
+ 	result = emult(M2, transposeM1, operator = Binaryop.PLUS)
+ 	return result
+  end
+
+  # M2 è la matrice delle facce
+  function getMatrixFF(M2) 
+	 transposeM2 = transpose(M2)
+	 result = emult(M2, transposeM2, operator = Binaryop.PLUS)
+	 return result
+  end
 
   function main()
     f1 = [ 1, 5, 7, 3]
@@ -98,7 +169,7 @@ export createM2
     tot = 8
     #println("Tot = ", tot)
     
-    #createM2(listFaces, tot)
+    matrixM2 = createM2(listFaces, tot)
     
     #first = [ 1, 0, 1, 0, 1, 0, 1, 0]
     #second = [ 0, 0, 1, 1, 0, 0, 1, 1]
@@ -128,7 +199,36 @@ export createM2
     f5 = [1, 1, 1, 1, 0, 0, 0, 0]
     f6 = [1, 1, 0, 0, 1, 1, 0, 0]
     list = [f1, f2, f3, f4, f5, f6]
-    createM1(list)
+
+    matrixM1 = createM1(list)
+    
+    matrixVV = getMatrixVV(from_matrix(matrixM1))
+    println("matrixVV --> ", matrixVV)
+    
+    matrixVE = getMatrixVE(matrixM1)
+    println("matrixVE --> ", matrixVE)
+    
+    matrixVF = getMatrixVF(matrixM2)
+    println("matrixVF --> ", matrixVF)
+    
+    matrixEV = getMatrixEV(matrixM1)
+    println("matrixEV --> ", matrixEV)
+    
+    matrixEE = getMatrixEE(from_matrix(matrixM1))
+    println("matrixEE --> ", matrixEE)
+    
+    matrixEF = getMatrixEF(from_matrix(matrixM1), from_matrix(matrixM2))
+    println("matrixEF --> ", matrixEF)
+    
+    matrixFV = getMatrixFV(matrixM2)
+    println("matrixFV --> ", matrixFV)
+    
+    matrixFE = getMatrixFE(from_matrix(matrixM1), from_matrix(matrixM2))
+    println("matrixFE --> ", matrixFE)
+    
+    matrixFF = getMatrixFF(from_matrix(matrixM2))
+    println("matrixFF --> ", matrixFF)
+    
   end
 
 main()
