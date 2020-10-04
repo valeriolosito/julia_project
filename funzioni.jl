@@ -1,34 +1,19 @@
 module Funzioni
 using SuiteSparseGraphBLAS, LinearAlgebra
 
-export createM2
+export createM2, createM1, getMatrixVV, getMatrixVE, getMatrixVF, getMatrixEV, getMatrixEE, getMatrixEF, getMatrixFV, getMatrixFE, getMatrixFF
 
  function createM2(listFaces, tot::Int64)
- 
    matrix = zeros(Int64, length(listFaces), tot)
-   #println("Matrix --> ", matrix)
-   println("-------INIZIO-----METODO----CREATE------M2------")
-   
    for i in 1:length(listFaces)
      vector = zeros(Int64,tot)
-     #println("Faccia ", i , " --> ", vector)
      currentList = listFaces[i]
-     #println("CurrentList --> ", currentList)
      for j in 1:length(currentList)
-      #println("Elemento J --> ", j)
       value = currentList[j]
-      #println("Value --> ", value)
       vector[value] = 1
      end
-     #println("Vector Finale --> ", vector)
-     #println()
-     #println()
      matrix[i,:] = vector
-     #println("Matrix Finael --> ", matrix)
-     #println("-----------")
    end
-   println("Matrix Finale --> ", matrix)
-   println("-------FINE-----METODO----CREATE------M2------")
    return matrix
   end
   
@@ -59,93 +44,90 @@ export createM2
    return resultSum
   end
   
-  
-  function createM1(list)
-   #Massimo -> va definita la matrice matrix
-   
-   #controllare lunghezza di tutti gli elementi di list
-      
-   size = length(list)
+  function createM1(matrixM2)
+   size2 = size(matrixM2)[1]
    vectorEdges = Any[]
-
-   for i in 1:size-1
-    currentList = list[i]
-    for j in i+1: size
-     nextList = list[j]
+   for i in 1:size2-1
+    currentList = matrixM2[i,:]
+    for j in i+1: size2
+     nextList = matrixM2[j,:]
      sumVector = sumBetweenList(currentList, nextList)
-     if (2 in sumVector)
+     if (countOccurence(sumVector,2) > 1)
       edge = createEdge(sumVector)
       push!(vectorEdges, edge)
-      #println("Edge da inserire", edge)
-      
-      #Massimo -> va inserito edge in matrix
-      #println("Vector Edge Parziale --> ", vectorEdges)
      end
     end
    end
-
    matrix = zeros(Int64, length(vectorEdges), length(vectorEdges[1]))
    for i in 1:length(vectorEdges)
-   	matrix[i, :] = vectorEdges[i]
+    matrix[i, :] = vectorEdges[i]
    end
-
-   println("Matrix Finale --> ", matrix)
-   println("-------FINE-----METODO----CREATE------M1------")
    return matrix
   end
   
+  function countOccurence(list, value)
+   count = 0;
+   for i in 1:length(list)
+    if(list[i] == value)
+     count = count + 1
+    end
+   end
+   return count
+  end
+  
+
   # M1 è la matrice degli spigoli
   function getMatrixVV(M1)
   	transposeM1 = transpose(M1)
- 	result = emult(transposeM1, M1, operator = Binaryop.PLUS)
+ 	result = mxm(from_matrix(transposeM1), from_matrix(M1),)
  	return result
   end
   
   # M1 è la matrice degli spigoli
   function getMatrixVE(M1) 
- 	return transpose(M1)
+ 	return from_matrix(transpose(M1))
   end
   
   # M2 è la matrice delle facce
   function getMatrixVF(M2) 
- 	return transpose(M2)
+ 	return from_matrix(transpose(M2))
   end
   
   # M1 è la matrice degli spigoli
   function getMatrixEV(M1) 
- 	return M1
+ 	return from_matrix(M1)
   end
   
   # M1 è la matrice degli spigoli
   function getMatrixEE(M1)
  	transposeM1 = transpose(M1)
- 	result = emult(M1, transposeM1, operator = Binaryop.PLUS)
+ 	result = mxm(from_matrix(M1), from_matrix(transposeM1))
  	return result
   end
   
   # M1 è la matrice degli spigoli, M2 è la matrice delle facce
   function getMatrixEF(M1,M2)
  	transposeM2 = transpose(M2)
- 	result = emult(M1, transposeM2, operator = Binaryop.PLUS)
+ 	result = mxm(from_matrix(M1), from_matrix(transposeM2))
  	return result
   end
 
   # M2 è la matrice delle facce
   function getMatrixFV(M2)
- 	return M2
+ 	return from_matrix(M2)
   end
 
   # M1 è la matrice degli spigoli, M2 è la matrice delle facce
   function getMatrixFE(M1,M2)
  	transposeM1 = transpose(M1)
- 	result = emult(M2, transposeM1, operator = Binaryop.PLUS)
+ 	result = mxm(from_matrix(M2), from_matrix(transposeM1))
  	return result
   end
 
   # M2 è la matrice delle facce
   function getMatrixFF(M2) 
 	 transposeM2 = transpose(M2)
-	 result = emult(M2, transposeM2, operator = Binaryop.PLUS)
+	 result = mxm(from_matrix(M2), from_matrix(transposeM2))
 	 return result
   end
 
@@ -157,41 +139,12 @@ export createM2
     f5 = [ 2, 1, 3, 4]
     f6 = [ 6, 5, 1, 2]
     listFaces = [ f1, f2, f3, f4, f5, f6]
-    println("Metodo Main")
-    println("f1 = ", f1)
-    println("f2 = ", f2)
-    println("f3 = ", f3)
-    println("f4 = ", f4)
-    println("f5 = ", f5)
-    println("f6 = ", f6)
-    println()
-    println("listFaces = ", listFaces)
+
     tot = 8
-    #println("Tot = ", tot)
+
     
     matrixM2 = createM2(listFaces, tot)
-    
-    #first = [ 1, 0, 1, 0, 1, 0, 1, 0]
-    #second = [ 0, 0, 1, 1, 0, 0, 1, 1]
-    #println("Soluzione corretta")
-    #result = sumBetweenList(first,second)
-    #println("Risultato --> ", result)
-    #if (2 in result)
-    #   result = createEdge(result)
-    # 	println("Risultato Edge--> ", result)
-    #end
- 	
-    
-    #println("--------------------------------")
-    #first = [ 1, 0, 0, 0, 1, 0, 0, 0]
-    #second = [ 0, 0, 1, 1, 0, 0, 1, 1]
-    #result = sumBetweenList(first,second)
-    #println("sumBetweenList --> ", result)
-    #if (2 in result)
-    # result = createEdge(result)
-    # println("Risultato Edge--> ", result)
-    #end
-    
+ 
     f1 = [1, 0, 1, 0, 1, 0, 1, 0]
     f2 = [0, 0, 1, 1, 0, 0, 1, 1]
     f3 = [0, 0, 0, 0, 1, 1, 1, 1]
@@ -199,37 +152,92 @@ export createM2
     f5 = [1, 1, 1, 1, 0, 0, 0, 0]
     f6 = [1, 1, 0, 0, 1, 1, 0, 0]
     list = [f1, f2, f3, f4, f5, f6]
-
-    matrixM1 = createM1(list)
     
-    matrixVV = getMatrixVV(from_matrix(matrixM1))
-    println("matrixVV --> ", matrixVV)
+
+    #OGGETTO STRAMBO
+    tot = 16
+
+    f1 = [ 16, 2, 4]
+    f2 = [ 2, 1, 3, 4]
+    f3 = [ 1, 11, 3]
+    f4 = [ 16, 4, 6]
+    f5 = [ 4, 3, 5, 6]
+    f6 = [ 3, 11, 5]
+    f7 = [ 16, 6, 8]
+    f8 = [ 6, 5, 7, 8]
+    f9 = [ 5, 11, 7]
+    f10 = [ 16, 8, 10]
+    f11 = [ 8, 7, 9, 10]
+    f12 = [ 7, 11, 9]
+    f13 = [ 16, 10, 13]
+    f14 = [ 10, 9, 12, 13]
+    f15 = [ 9, 11, 12]
+    f16 = [ 16, 13, 15]
+    f17 = [ 13, 12, 14, 15]
+    f18 = [ 12, 11, 14]
+    f19 = [ 16, 15, 2]
+    f20 = [ 15, 14, 1, 2]
+    f21 = [ 14, 11, 1]
+    
+    
+    listFaces = [f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,f13,f14,f15,f16,f17,f18,f19,f20,f21]
+    
+   
+    matrixM2 = createM2(listFaces, tot)
+    numRow = size(matrixM2)[1]
+    
+    matrixM1 = createM1(matrixM2)
+  
+  
+  
+    matrixVV = getMatrixVV(matrixM1)
+    println("matrixVV")
+    println(Matrix(matrixVV))
+    println(matrixVV)
     
     matrixVE = getMatrixVE(matrixM1)
-    println("matrixVE --> ", matrixVE)
+    println("matrixVE")
+    #println( Matrix(matrixVE))
+    println( matrixVE)
     
     matrixVF = getMatrixVF(matrixM2)
-    println("matrixVF --> ", matrixVF)
+    println("matrixVF")
+    #println(Matrix(matrixVF))
+    println(matrixVF)
     
     matrixEV = getMatrixEV(matrixM1)
-    println("matrixEV --> ", matrixEV)
+    println("matrixEV")
+    #println( Matrix(matrixEV))
+    println(matrixEV)
     
-    matrixEE = getMatrixEE(from_matrix(matrixM1))
-    println("matrixEE --> ", matrixEE)
+    matrixEE = getMatrixEE(matrixM1)
+    println("matrixEE")
+    #println(Matrix(matrixEE))
+    println(matrixEE)
     
-    matrixEF = getMatrixEF(from_matrix(matrixM1), from_matrix(matrixM2))
-    println("matrixEF --> ", matrixEF)
+    matrixEF = getMatrixEF(matrixM1, matrixM2)
+    println("matrixEF")
+    #println(Matrix(matrixEF))
+    println(matrixEF)
     
     matrixFV = getMatrixFV(matrixM2)
-    println("matrixFV --> ", matrixFV)
+    println("matrixFV")
+    #println(Matrix(matrixFV))
+    println(matrixFV)
     
-    matrixFE = getMatrixFE(from_matrix(matrixM1), from_matrix(matrixM2))
-    println("matrixFE --> ", matrixFE)
+    matrixFE = getMatrixFE(matrixM1, matrixM2)
+    println("matrixFE")
+    #println(Matrix(matrixFE))
+    println(matrixFE)
     
-    matrixFF = getMatrixFF(from_matrix(matrixM2))
-    println("matrixFF --> ", matrixFF)
+    matrixFF = getMatrixFF(matrixM2)
+    println("matrixFF")
+    #println(Matrix(matrixFF))
+    println(matrixFF)
+    
     
   end
+  
 
 main()
 end

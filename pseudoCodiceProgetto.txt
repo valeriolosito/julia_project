@@ -128,10 +128,12 @@ createM1(list) {
    for(int j = i + 1; j < list.size; j++) {
     nextList = list.get(j)
     sumVector = sumBetweenList(currentList, nextList);
-    addEdge(sumVector, matrix)
+    if( sumVector.contains(2) {
+    	edge = createEdge(sumVector)
+    	matrix.add(edge)
+    }
    } 	
  }
-
 }
 
 //first è una lista e second è una lista
@@ -153,7 +155,7 @@ sumBetweenList(first, second){
 
 
 
-addEdge(vectorSum, matrix) {
+createEdge(vectorSum) {
  int size = vectorSum.size
  
  for( int i = 0; i < size; i++) {
@@ -163,11 +165,9 @@ addEdge(vectorSum, matrix) {
    vectorSum[i] = 1
   }
  }
- 
- matrix.add(vectorSum)
+
 
 }
-
 
 
 // implementazione delle nove funzioni
