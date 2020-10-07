@@ -1,4 +1,4 @@
-using Documenter, Example
+using Documenter
 
 makedocs(sitename = "My Documentation")
 deploydocs(
