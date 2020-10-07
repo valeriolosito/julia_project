@@ -1,2 +1,9 @@
+name = "Funzioni"
+uuid = "2ac7369f-bb01-4195-9f57-39720472530m"
+authors = ["Valerio e Massimo"]
+version = "0.1.0"
+
+
 [deps]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
