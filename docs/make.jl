@@ -1,11 +1,14 @@
-using Documenter
+push!(LOAD_PATH,"../src/")
+using Documenter, Funzioni
 
 makedocs(
-	sitename = "My Documentation",
+	sitename = "Julia Project",
+	modules = [Funzioni],
 	pages = Any[
+		"Home" => "index.md",
 		"Funzioni" => "funzioni.md"
 	]	
 )
 deploydocs(
-   repo = "github.com/valeriolosito/julia_project.git",
+   repo = "github.com/valeriolosito/julia_project.git"
 )

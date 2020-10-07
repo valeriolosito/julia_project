@@ -3,6 +3,19 @@ using SuiteSparseGraphBLAS, LinearAlgebra
 
 export createM2, createM1, getMatrixVV, getMatrixVE, getMatrixVF, getMatrixEV, getMatrixEE, getMatrixEF, getMatrixFV, getMatrixFE, getMatrixFF
 
+"""
+    createM2(m)
+Create a `GBMatrix` from the given `Matrix` `m`.
+# Examples
+```julia-repl
+julia> from_matrix([1 0 2; 0 0 3; 0 1 0])
+3x3 GBMatrix{Int64} with 4 stored entries:
+  [1, 1] = 1
+  [1, 3] = 2
+  [2, 3] = 3
+  [3, 2] = 1
+```
+"""
  function createM2(listFaces, tot::Int64)
    matrix = zeros(Int64, length(listFaces), tot)
    for i in 1:length(listFaces)
