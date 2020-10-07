@@ -38,6 +38,7 @@ export createM2, createM1, getMatrixVV, getMatrixVE, getMatrixVF, getMatrixEV, g
    return matrix
   end
   
+  
   function intersection(row_i, row_j)
    if(length(row_i) == length(row_j))
     size = length(row_i)
