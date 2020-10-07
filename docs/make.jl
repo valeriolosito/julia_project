@@ -3,7 +3,7 @@ using Documenter, Funzioni
 
 makedocs(
 	sitename = "Julia Project",
-	modules = [Funzioni],
+	
 	pages = Any[
 		"Home" => "index.md",
 		"Funzioni" => "funzioni.md"
