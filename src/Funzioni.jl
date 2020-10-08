@@ -1,5 +1,5 @@
 module Funzioni
-using SuiteSparseGraphBLAS, LinearAlgebra
+import SuiteSparseGraphBLAS, LinearAlgebra
 
 export createM2, createM1, getMatrixVV, getMatrixVE, getMatrixVF, getMatrixEV, getMatrixEE, getMatrixEF, getMatrixFV, getMatrixFE, getMatrixFF
 
