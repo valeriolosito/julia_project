@@ -4,8 +4,24 @@ using SuiteSparseGraphBLAS, LinearAlgebra
 export createM2, createM1, getMatrixVV, getMatrixVE, getMatrixVF, getMatrixEV, getMatrixEE, getMatrixEF, getMatrixFV, getMatrixFE, getMatrixFF
 
 """
-    createM2(listFaces, tot::Int64)
-   Create matrix M2.
+    createM2(l, t)
+    Create an M2 matrix that has the faces on the rows and the vertices on the columns.
+    
+    # Arguments
+    - `l`: the faces list of object
+    - `t`: the number of vertex.
+    
+    # Examples
+    ```julia-repl
+    julia> createM2([[1, 5, 7, 3], [4, 3, 7, 8], [8, 7, 5, 6],[6, 2, 4, 8],[2, 1, 3, 4],[6, 5, 1, 2]], 8)
+    6×8 Array{Int64,2}:
+    1  0  1  0  1  0  1  0
+    0  0  1  1  0  0  1  1
+    0  0  0  0  1  1  1  1
+    0  1  0  1  0  1  0  1
+    1  1  1  1  0  0  0  0
+    1  1  0  0  1  1  0  0
+    ```
 """
  function createM2(listFaces, tot::Int64)
    matrix = zeros(Int64, length(listFaces), tot)
@@ -169,8 +185,8 @@ export createM2, createM1, getMatrixVV, getMatrixVE, getMatrixVF, getMatrixEV, g
     f6 = [1, 1, 0, 0, 1, 1, 0, 0]
     list = [f1, f2, f3, f4, f5, f6]
     
-
     #OGGETTO STRAMBO
+    #=
     tot = 16
 
     f1 = [ 16, 2, 4]
@@ -197,23 +213,9 @@ export createM2, createM1, getMatrixVV, getMatrixVE, getMatrixVF, getMatrixEV, g
     
     
     listFaces = [f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,f13,f14,f15,f16,f17,f18,f19,f20,f21]
-    
-   
-    #matrixM2 = createM2(listFaces, tot)
-    #numRow = size(matrixM2)[1]
-    matrixM3 = zeros(Int64, 6, 8)
-    matrixM3[1,:] = [1 1 0 0 0 0 1 1]
-    matrixM3[2,:] = [1 0 1 0 1 0 1 0]
-    matrixM3[3,:] = [0 0 0 0 1 1 1 1]
-    matrixM3[4,:] = [0 1 0 1 0 1 0 1]
-    matrixM3[5,:] = [0 0 1 1 1 1 0 0]
-    matrixM3[6,:] = [1 1 1 1 0 0 0 0]
-    
-    println("qui" , matrixM3)
-    
-    matrixM1 = createM1(matrixM3)
-    println("M1 ->")
-    println(matrixM1)  
+    =#
+            
+    matrixM1 = createM1(matrixM2) 
   
     matrixVV = getMatrixVV(matrixM1)
     println("matrixVV")
