@@ -5,7 +5,7 @@ export createM2, createM1, getMatrixVV, getMatrixVE, getMatrixVF, getMatrixEV, g
 
 """
     createM2(listFaces, tot::Int64)
-   Create matrix M2`.
+   Create matrix M2.
 """
  function createM2(listFaces, tot::Int64)
    matrix = zeros(Int64, length(listFaces), tot)
@@ -21,6 +21,10 @@ export createM2, createM1, getMatrixVV, getMatrixVE, getMatrixVF, getMatrixEV, g
    return matrix
   end
   
+"""
+    createM1(listFaces, tot::Int64)
+    Create matrix M1.
+"""
   function createM1(matrixM2)
    size2 = size(matrixM2)[1]
    vectorEdges = Any[]
@@ -62,55 +66,82 @@ export createM2, createM1, getMatrixVV, getMatrixVE, getMatrixVF, getMatrixEV, g
    end
   end
   
-  # M1 è la matrice degli spigoli
+"""
+    getMatrixVV(M1)
+    getMatrixVV
+"""  
   function getMatrixVV(M1)
   	transposeM1 = transpose(M1)
  	result = mxm(from_matrix(transposeM1), from_matrix(M1),)
  	return result
   end
-  
-  # M1 è la matrice degli spigoli
+
+"""
+    getMatrixVE(M1)
+    getMatrixVE
+""" 
   function getMatrixVE(M1) 
  	return from_matrix(transpose(M1))
   end
-  
-  # M2 è la matrice delle facce
+
+"""
+    getMatrixVF(M2)
+    getMatrixVF
+"""  
   function getMatrixVF(M2) 
  	return from_matrix(transpose(M2))
   end
   
-  # M1 è la matrice degli spigoli
+"""
+    getMatrixEV(M1) 
+    getMatrixEV
+""" 
   function getMatrixEV(M1) 
  	return from_matrix(M1)
   end
-  
-  # M1 è la matrice degli spigoli
+
+"""
+    getMatrixEE(M1)
+    getMatrixEE
+"""  
   function getMatrixEE(M1)
  	transposeM1 = transpose(M1)
  	result = mxm(from_matrix(M1), from_matrix(transposeM1))
  	return result
   end
-  
-  # M1 è la matrice degli spigoli, M2 è la matrice delle facce
+
+"""
+    getMatrixEF(M1,M2)
+    getMatrixEF
+"""  
   function getMatrixEF(M1,M2)
  	transposeM2 = transpose(M2)
  	result = mxm(from_matrix(M1), from_matrix(transposeM2))
  	return result
   end
 
-  # M2 è la matrice delle facce
+"""
+    getMatrixFV(M2)
+    getMatrixFV
+"""
   function getMatrixFV(M2)
  	return from_matrix(M2)
   end
 
-  # M1 è la matrice degli spigoli, M2 è la matrice delle facce
+"""
+    getMatrixFE(M1,M2)
+    getMatrixFE
+"""
   function getMatrixFE(M1,M2)
  	transposeM1 = transpose(M1)
  	result = mxm(from_matrix(M2), from_matrix(transposeM1))
  	return result
   end
 
-  # M2 è la matrice delle facce
+"""
+    getMatrixFF(M2)
+    getMatrixFF
+"""
   function getMatrixFF(M2) 
 	 transposeM2 = transpose(M2)
 	 result = mxm(from_matrix(M2), from_matrix(transposeM2))

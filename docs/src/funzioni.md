@@ -1,3 +1,13 @@
 ```@docs
 createM2
+createM1
+getMatrixVV
+getMatrixVE
+getMatrixVF
+getMatrixEV
+getMatrixEE
+getMatrixEF
+getMatrixFV
+getMatrixFE
+getMatrixFF
 ```
