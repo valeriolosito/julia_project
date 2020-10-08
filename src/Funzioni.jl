@@ -3,7 +3,6 @@ using SuiteSparseGraphBLAS, LinearAlgebra
 
 export createM2, createM1, getMatrixVV, getMatrixVE, getMatrixVF, getMatrixEV, getMatrixEE, getMatrixEF, getMatrixFV, getMatrixFE, getMatrixFF
 
-
 """
     createM2(listFaces, tot::Int64)
    Create matrix M2`.
