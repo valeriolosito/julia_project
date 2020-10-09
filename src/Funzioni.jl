@@ -6,11 +6,11 @@ export createM2, createM1, getMatrixVV, getMatrixVE, getMatrixVF, getMatrixEV, g
 """
     createM2(l, t)
 
-Create an M2 matrix that has the faces on the rows and the vertex on the columns.
+Create an M2 matrix that has the faces on the rows and the vertices on the columns.
     
 # Arguments:
 - `l`: the faces list of object
-- `t`: the number of vertex.
+- `t`: the number of vertices.
     
 # Examples:
 ```julia-repl
@@ -41,7 +41,7 @@ julia> createM2([[1, 5, 7, 3], [4, 3, 7, 8], [8, 7, 5, 6],[6, 2, 4, 8],[2, 1, 3,
 """
     createM1(m)
 
-Create an M1 matrix that has the edges on the rows and the vertex on the columns.
+Create an M1 matrix that has the edges on the rows and the vertices on the columns.
     
 # Arguments:
 - `m`: the M2 matrix of faces
@@ -109,7 +109,7 @@ julia> createM1(matrixM2)
   
 """
     getMatrixVV(m)
-Create a VV `GBMatrix` from an M1 matrix that has the vertex on the rows and the vertex on the columns.
+Create a VV `GBMatrix` that has the vertices on the rows and the vertex on the columns from an M1 matrix.
     
 # Arguments:
 - `m`: the M1 matrix of edges
@@ -131,7 +131,19 @@ julia> getMatrixVV(matrixM1)
   [2, 4] = 1
   [2, 6] = 1
   [3, 1] = 1
-  ⋮
+  [3, 3] = 3
+  [3, 4] = 1
+  [3, 7] = 1
+  [4, 2] = 1
+  [4, 3] = 1
+  [4, 4] = 3
+  [4, 8] = 1
+  [5, 1] = 1
+  [5, 5] = 3
+  [5, 6] = 1
+  [5, 7] = 1
+  [6, 2] = 1
+  [6, 5] = 1
   [6, 6] = 3
   [6, 8] = 1
   [7, 3] = 1
@@ -151,8 +163,8 @@ julia> getMatrixVV(matrixM1)
   end
 
 """
-    getMatrixVE(M1)
-Create a VE `GBMatrix` from an M1 matrix that has the vertex on the rows and the edges on the columns.
+    getMatrixVE(m)
+Create a VE `GBMatrix`that has the vertices on the rows and the edges on the columns from an M1 matrix.
     
 # Arguments:
 - `m`: the M1 matrix of edges
@@ -165,26 +177,30 @@ julia> matrixM1 = createM1(matrixM2)
 
 julia> getMatrixVE(matrixM1) 
 8x12 GBMatrix{Int64} with 24 stored entries:
-  [1, 3] = 1
-  [1, 4] = 1
+  [1, 3]  = 1
+  [1, 4]  = 1
   [1, 12] = 1
   [2, 10] = 1
   [2, 11] = 1
   [2, 12] = 1
-  [3, 1] = 1
-  [3, 3] = 1
-  [3, 7] = 1
-  ⋮
-  [5, 9] = 1
-  [6, 8] = 1
-  [6, 9] = 1
+  [3, 1]  = 1
+  [3, 3]  = 1
+  [3, 7]  = 1
+  [4, 6]  = 1
+  [4, 7]  = 1
+  [4, 10] = 1
+  [5, 2]  = 1
+  [5, 4]  = 1
+  [5, 9]  = 1
+  [6, 8]  = 1
+  [6, 9]  = 1
   [6, 11] = 1
-  [7, 1] = 1
-  [7, 2] = 1
-  [7, 5] = 1
-  [8, 5] = 1
-  [8, 6] = 1
-  [8, 8] = 1
+  [7, 1]  = 1
+  [7, 2]  = 1
+  [7, 5]  = 1
+  [8, 5]  = 1
+  [8, 6]  = 1
+  [8, 8]  = 1
 ```
 """ 
   function getMatrixVE(M1) 
@@ -192,8 +208,8 @@ julia> getMatrixVE(matrixM1)
   end
 
 """
-    getMatrixVF(M2)
-Create a VF `GBMatrix` from an M2 matrix that has the vertex on the rows and the faces on the columns.
+    getMatrixVF(m)
+Create a VF `GBMatrix` that has the vertices on the rows and the faces on the columns from an M2 matrix.
     
 # Arguments:
 - `m`: the M2 matrix of faces
@@ -201,8 +217,6 @@ Create a VF `GBMatrix` from an M2 matrix that has the vertex on the rows and the
 # Examples:
 ```julia-repl
 julia> matrixM2 = createM2([[1, 5, 7, 3], [4, 3, 7, 8], [8, 7, 5, 6],[6, 2, 4, 8],[2, 1, 3, 4],[6, 5, 1, 2]], 8)
-
-julia> matrixM1 = createM1(matrixM2)
 
 julia> getMatrixVF(matrixM2)
 8x6 GBMatrix{Int64} with 24 stored entries:
@@ -215,7 +229,11 @@ julia> getMatrixVF(matrixM2)
   [3, 1] = 1
   [3, 2] = 1
   [3, 5] = 1
-  ⋮
+  [4, 2] = 1
+  [4, 4] = 1
+  [4, 5] = 1
+  [5, 1] = 1
+  [5, 3] = 1
   [5, 6] = 1
   [6, 3] = 1
   [6, 4] = 1
@@ -226,22 +244,107 @@ julia> getMatrixVF(matrixM2)
   [8, 2] = 1
   [8, 3] = 1
   [8, 4] = 1
+```
 """  
   function getMatrixVF(M2) 
  	return from_matrix(transpose(M2))
   end
   
 """
-    getMatrixEV(M1) 
-    getMatrixEV
+    getMatrixEV(m) 
+Create a EV `GBMatrix` that has the edges on the rows and the vertices on the columns from an M1 matrix.
+    
+# Arguments:
+- `m`: the M1 matrix of edges
+    
+# Examples:
+```julia-repl
+julia> matrixM2 = createM2([[1, 5, 7, 3], [4, 3, 7, 8], [8, 7, 5, 6],[6, 2, 4, 8],[2, 1, 3, 4],[6, 5, 1, 2]], 8)
+
+julia> matrixM1 = createM1(matrixM2)
+
+julia> getMatrixEV(matrixM1)
+12x8 GBMatrix{Int64} with 24 stored entries:
+  [ 1, 3] = 1
+  [ 1, 7] = 1
+  [ 2, 5] = 1
+  [ 2, 7] = 1
+  [ 3, 1] = 1
+  [ 3, 3] = 1
+  [ 4, 1] = 1
+  [ 4, 5] = 1
+  [ 5, 7] = 1
+  [ 5, 8] = 1
+  [ 6, 4] = 1
+  [ 6, 8] = 1
+  [ 7, 3] = 1
+  [ 7, 4] = 1
+  [ 8, 6] = 1
+  [ 8, 8] = 1
+  [ 9, 5] = 1
+  [ 9, 6] = 1
+  [10, 2] = 1
+  [10, 4] = 1
+  [11, 2] = 1
+  [11, 6] = 1
+  [12, 1] = 1
+  [12, 2] = 1
+```
 """ 
   function getMatrixEV(M1) 
  	return from_matrix(M1)
   end
 
 """
-    getMatrixEE(M1)
-    getMatrixEE
+    getMatrixEE(m)
+Create a EE `GBMatrix` that has the edges on the rows and columns from an M1 matrix.
+    
+# Arguments:
+- `m`: the M1 matrix of edges
+    
+# Examples:
+```julia-repl
+julia> matrixM2 = createM2([[1, 5, 7, 3], [4, 3, 7, 8], [8, 7, 5, 6],[6, 2, 4, 8],[2, 1, 3, 4],[6, 5, 1, 2]], 8)
+
+julia> matrixM1 = createM1(matrixM2)
+
+julia> getMatrixEE(matrixM1)
+12x12 GBMatrix{Int64} with 60 stored entries:
+  [ 1,  1] = 2
+  [ 1,  2] = 1
+  [ 1,  3] = 1
+  [ 1,  5] = 1
+  [ 1,  7] = 1
+  [ 2,  1] = 1
+  [ 2,  2] = 2
+  [ 2,  4] = 1
+  [ 2,  5] = 1
+  [ 2,  9] = 1
+  [ 3,  1] = 1
+  [ 3,  3] = 2
+  [ 3,  4] = 1
+  [ 3,  7] = 1
+  [ 3, 12] = 1
+  [ 4,  2] = 1
+  ⋮
+  [ 9,  9] = 2
+  [ 9, 11] = 1
+  [10,  6] = 1
+  [10,  7] = 1
+  [10, 10] = 2
+  [10, 11] = 1
+  [10, 12] = 1
+  [11,  8] = 1
+  [11,  9] = 1
+  [11, 10] = 1
+  [11, 11] = 2
+  [11, 12] = 1
+  [12,  3] = 1
+  [12,  4] = 1
+  [12, 10] = 1
+  [12, 11] = 1
+  [12, 12] = 2
+```
 """  
   function getMatrixEE(M1)
  	transposeM1 = transpose(M1)
@@ -250,8 +353,56 @@ julia> getMatrixVF(matrixM2)
   end
 
 """
-    getMatrixEF(M1,M2)
-    getMatrixEF
+    getMatrixEF(m,n)
+Create a EF `GBMatrix` that has the edges on the rows and the faces on the columns from M1 and M2 matrices.
+    
+# Arguments:
+- `m`: the M1 matrix of edges
+- `n`: the M2 matrix of faces
+    
+# Examples:
+```julia-repl
+julia> matrixM2 = createM2([[1, 5, 7, 3], [4, 3, 7, 8], [8, 7, 5, 6],[6, 2, 4, 8],[2, 1, 3, 4],[6, 5, 1, 2]], 8)
+
+julia> matrixM1 = createM1(matrixM2)
+
+julia> getMatrixEF(matrixM1,matrixM2)
+12x6 GBMatrix{Int64} with 48 stored entries:
+  [ 1, 1] = 2
+  [ 1, 2] = 2
+  [ 1, 3] = 1
+  [ 1, 5] = 1
+  [ 2, 1] = 2
+  [ 2, 2] = 1
+  [ 2, 3] = 2
+  [ 2, 6] = 1
+  [ 3, 1] = 2
+  [ 3, 2] = 1
+  [ 3, 5] = 2
+  [ 3, 6] = 1
+  [ 4, 1] = 2
+  [ 4, 3] = 1
+  [ 4, 5] = 1
+  [ 4, 6] = 2
+  ⋮
+  [ 8, 6] = 1
+  [ 9, 1] = 1
+  [ 9, 3] = 2
+  [ 9, 4] = 1
+  [ 9, 6] = 2
+  [10, 2] = 1
+  [10, 4] = 2
+  [10, 5] = 2
+  [10, 6] = 1
+  [11, 3] = 1
+  [11, 4] = 2
+  [11, 5] = 1
+  [11, 6] = 2
+  [12, 1] = 1
+  [12, 4] = 1
+  [12, 5] = 2
+  [12, 6] = 2
+```
 """  
   function getMatrixEF(M1,M2)
  	transposeM2 = transpose(M2)
@@ -260,16 +411,99 @@ julia> getMatrixVF(matrixM2)
   end
 
 """
-    getMatrixFV(M2)
-    getMatrixFV
+    getMatrixFV(m)
+Create a FV `GBMatrix` that has the faces on the rows and the vertices on the columns from an M2 matrix.
+    
+# Arguments:
+- `m`: the M2 matrix of faces
+    
+# Examples:
+```julia-repl
+julia> matrixM2 = createM2([[1, 5, 7, 3], [4, 3, 7, 8], [8, 7, 5, 6],[6, 2, 4, 8],[2, 1, 3, 4],[6, 5, 1, 2]], 8)
+
+julia> getMatrixFV(matrixM2)
+6x8 GBMatrix{Int64} with 24 stored entries:
+  [1, 1] = 1
+  [1, 3] = 1
+  [1, 5] = 1
+  [1, 7] = 1
+  [2, 3] = 1
+  [2, 4] = 1
+  [2, 7] = 1
+  [2, 8] = 1
+  [3, 5] = 1
+  [3, 6] = 1
+  [3, 7] = 1
+  [3, 8] = 1
+  [4, 2] = 1
+  [4, 4] = 1
+  [4, 6] = 1
+  [4, 8] = 1
+  [5, 1] = 1
+  [5, 2] = 1
+  [5, 3] = 1
+  [5, 4] = 1
+  [6, 1] = 1
+  [6, 2] = 1
+  [6, 5] = 1
+  [6, 6] = 1
+```
 """
   function getMatrixFV(M2)
  	return from_matrix(M2)
   end
 
 """
-    getMatrixFE(M1,M2)
-    getMatrixFE
+    getMatrixFE(m,n)
+Create a FE `GBMatrix` that has the faces on the rows and the edges on the columns from M1 and M2 matrices.
+    
+# Arguments:
+- `m`: the M1 matrix of edges
+- `n`: the M2 matrix of faces
+    
+# Examples:
+```julia-repl
+julia> matrixM2 = createM2([[1, 5, 7, 3], [4, 3, 7, 8], [8, 7, 5, 6],[6, 2, 4, 8],[2, 1, 3, 4],[6, 5, 1, 2]], 8)
+
+julia> matrixM1 = createM1(matrixM2)
+
+julia> getMatrixFE(matrixM1,matrixM2)
+6x12 GBMatrix{Int64} with 48 stored entries:
+  [1,  1] = 2
+  [1,  2] = 2
+  [1,  3] = 2
+  [1,  4] = 2
+  [1,  5] = 1
+  [1,  7] = 1
+  [1,  9] = 1
+  [1, 12] = 1
+  [2,  1] = 2
+  [2,  2] = 1
+  [2,  3] = 1
+  [2,  5] = 2
+  [2,  6] = 2
+  [2,  7] = 2
+  [2,  8] = 1
+  [2, 10] = 1
+  ⋮
+  [4, 12] = 1
+  [5,  1] = 1
+  [5,  3] = 2
+  [5,  4] = 1
+  [5,  6] = 1
+  [5,  7] = 2
+  [5, 10] = 2
+  [5, 11] = 1
+  [5, 12] = 2
+  [6,  2] = 1
+  [6,  3] = 1
+  [6,  4] = 2
+  [6,  8] = 1
+  [6,  9] = 2
+  [6, 10] = 1
+  [6, 11] = 2
+  [6, 12] = 2
+```
 """
   function getMatrixFE(M1,M2)
  	transposeM1 = transpose(M1)
@@ -278,8 +512,49 @@ julia> getMatrixVF(matrixM2)
   end
 
 """
-    getMatrixFF(M2)
-    getMatrixFF
+    getMatrixFF(m)
+Create a FF `GBMatrix` that has the faces on the rows and the columns from an M2 matrix.
+    
+# Arguments:
+- `m`: the M2 matrix of faces
+    
+# Examples:
+```julia-repl
+julia> matrixM2 = createM2([[1, 5, 7, 3], [4, 3, 7, 8], [8, 7, 5, 6],[6, 2, 4, 8],[2, 1, 3, 4],[6, 5, 1, 2]], 8)
+
+julia> getMatrixFF(matrixM2)
+6x6 GBMatrix{Int64} with 30 stored entries:
+  [1, 1] = 4
+  [1, 2] = 2
+  [1, 3] = 2
+  [1, 5] = 2
+  [1, 6] = 2
+  [2, 1] = 2
+  [2, 2] = 4
+  [2, 3] = 2
+  [2, 4] = 2
+  [2, 5] = 2
+  [3, 1] = 2
+  [3, 2] = 2
+  [3, 3] = 4
+  [3, 4] = 2
+  [3, 6] = 2
+  [4, 2] = 2
+  [4, 3] = 2
+  [4, 4] = 4
+  [4, 5] = 2
+  [4, 6] = 2
+  [5, 1] = 2
+  [5, 2] = 2
+  [5, 4] = 2
+  [5, 5] = 4
+  [5, 6] = 2
+  [6, 1] = 2
+  [6, 3] = 2
+  [6, 4] = 2
+  [6, 5] = 2
+  [6, 6] = 4
+```
 """
   function getMatrixFF(M2) 
 	 transposeM2 = transpose(M2)
