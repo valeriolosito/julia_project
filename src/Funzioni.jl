@@ -164,7 +164,7 @@ julia> getMatrixVV(matrixM1)
 
 """
     getMatrixVE(m)
-Create a VE `GBMatrix`that has the vertices on the rows and the edges on the columns from an M1 matrix.
+Create a VE `GBMatrix` that has the vertices on the rows and the edges on the columns from an M1 matrix.
     
 # Arguments:
 - `m`: the M1 matrix of edges
