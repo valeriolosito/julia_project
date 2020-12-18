@@ -658,15 +658,6 @@ julia> getMatrixFF(matrixM2)
     matrixEF = getMatrixEF(matrixM1, matrixM2)
     matrixFV = getMatrixFV(matrixM2)
     matrixFE = getMatrixFE(matrixM1, matrixM2)  
-    matrixFF = getMatrixFF(matrixM2)
-    
-    println("matrixEV")
-    println(matrixFF)
-    
+    matrixFF = getMatrixFF(matrixM2)    
    end
-   
-   main()
-   
-   
-   
 end
