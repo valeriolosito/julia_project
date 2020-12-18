@@ -87,7 +87,6 @@ julia> createM1(matrixM2)
    return matrix
   end
   
-  
   function intersection(row_i, row_j)
    if(length(row_i) == length(row_j))
     size = length(row_i)
@@ -107,6 +106,30 @@ julia> createM1(matrixM2)
    end
   end
   
+  function filteringProcedure(leftMatrix, resultMatrix)
+    count = size(leftMatrix,1)
+    for i in 1:count
+     row = leftMatrix[i, :]
+     k = getK(row)     
+     for j in 1:size(resultMatrix,2)
+      if(resultMatrix[i,j] == k)
+       resultMatrix[i,j] = 1
+      else
+       resultMatrix[i,j] = 0
+      end
+     end     
+    end
+    return resultMatrix
+  end
+   
+  function getK(row)
+    count = 0
+    for i in 1:length(row)
+     count = count + row[i]
+    end
+    return count
+  end
+  
 """
     getMatrixVV(m)
 Create a VV `GBMatrix` that has the vertices on the rows and the vertex on the columns from an M1 matrix.
@@ -122,44 +145,47 @@ julia> matrixM1 = createM1(matrixM2)
 
 julia> getMatrixVV(matrixM1) 
 8x8 GBMatrix{Int64} with 32 stored entries:
-  [1, 1] = 3
-  [1, 2] = 1
-  [1, 3] = 1
-  [1, 5] = 1
-  [2, 1] = 1
-  [2, 2] = 3
-  [2, 4] = 1
-  [2, 6] = 1
-  [3, 1] = 1
-  [3, 3] = 3
-  [3, 4] = 1
-  [3, 7] = 1
-  [4, 2] = 1
-  [4, 3] = 1
-  [4, 4] = 3
-  [4, 8] = 1
-  [5, 1] = 1
-  [5, 5] = 3
-  [5, 6] = 1
-  [5, 7] = 1
-  [6, 2] = 1
-  [6, 5] = 1
-  [6, 6] = 3
-  [6, 8] = 1
-  [7, 3] = 1
-  [7, 5] = 1
-  [7, 7] = 3
-  [7, 8] = 1
-  [8, 4] = 1
-  [8, 6] = 1
-  [8, 7] = 1
-  [8, 8] = 3
+  [1, 1] = 1
+  [1, 2] = 0
+  [1, 3] = 0
+  [1, 4] = 0
+  [1, 5] = 0
+  [1, 6] = 0
+  [1, 7] = 0
+  [1, 8] = 0
+  [2, 1] = 0
+  [2, 2] = 1
+  [2, 3] = 0
+  [2, 4] = 0
+  [2, 5] = 0
+  [2, 6] = 0
+  [2, 7] = 0
+  [2, 8] = 0
+  ⋮
+
+  [6, 8] = 0
+  [7, 1] = 0
+  [7, 2] = 0
+  [7, 3] = 0
+  [7, 4] = 0
+  [7, 5] = 0
+  [7, 6] = 0
+  [7, 7] = 1
+  [7, 8] = 0
+  [8, 1] = 0
+  [8, 2] = 0
+  [8, 3] = 0
+  [8, 4] = 0
+  [8, 5] = 0
+  [8, 6] = 0
+  [8, 7] = 0
+  [8, 8] = 1
 ```
 """  
   function getMatrixVV(M1)
   	transposeM1 = transpose(M1)
- 	result = mxm(from_matrix(transposeM1), from_matrix(M1),)
- 	return result
+ 	result = mxm(from_matrix(transposeM1), from_matrix(M1))
+ 	return filteringProcedure(transposeM1,result)
   end
 
 """
@@ -177,30 +203,30 @@ julia> matrixM1 = createM1(matrixM2)
 
 julia> getMatrixVE(matrixM1) 
 8x12 GBMatrix{Int64} with 24 stored entries:
-  [1, 3]  = 1
-  [1, 4]  = 1
+  [1, 3] = 1
+  [1, 4] = 1
   [1, 12] = 1
   [2, 10] = 1
   [2, 11] = 1
   [2, 12] = 1
-  [3, 1]  = 1
-  [3, 3]  = 1
-  [3, 7]  = 1
-  [4, 6]  = 1
-  [4, 7]  = 1
+  [3, 1] = 1
+  [3, 3] = 1
+  [3, 7] = 1
+  [4, 6] = 1
+  [4, 7] = 1
   [4, 10] = 1
-  [5, 2]  = 1
-  [5, 4]  = 1
-  [5, 9]  = 1
-  [6, 8]  = 1
-  [6, 9]  = 1
+  [5, 2] = 1
+  [5, 4] = 1
+  [5, 9] = 1
+  [6, 8] = 1
+  [6, 9] = 1
   [6, 11] = 1
-  [7, 1]  = 1
-  [7, 2]  = 1
-  [7, 5]  = 1
-  [8, 5]  = 1
-  [8, 6]  = 1
-  [8, 8]  = 1
+  [7, 1] = 1
+  [7, 2] = 1
+  [7, 5] = 1
+  [8, 5] = 1
+  [8, 6] = 1
+  [8, 8] = 1
 ```
 """ 
   function getMatrixVE(M1) 
@@ -310,46 +336,47 @@ julia> matrixM1 = createM1(matrixM2)
 
 julia> getMatrixEE(matrixM1)
 12x12 GBMatrix{Int64} with 60 stored entries:
-  [ 1,  1] = 2
-  [ 1,  2] = 1
-  [ 1,  3] = 1
-  [ 1,  5] = 1
-  [ 1,  7] = 1
-  [ 2,  1] = 1
-  [ 2,  2] = 2
-  [ 2,  4] = 1
-  [ 2,  5] = 1
-  [ 2,  9] = 1
-  [ 3,  1] = 1
-  [ 3,  3] = 2
-  [ 3,  4] = 1
-  [ 3,  7] = 1
-  [ 3, 12] = 1
-  [ 4,  2] = 1
+  [ 1,  1] = 1
+  [ 1,  2] = 0
+  [ 1,  3] = 0
+  [ 1,  4] = 0
+  [ 1,  5] = 0
+  [ 1,  6] = 0
+  [ 1,  7] = 0
+  [ 1,  8] = 0
+  [ 1,  9] = 0
+  [ 1, 10] = 0
+  [ 1, 11] = 0
+  [ 1, 12] = 0
+  [ 2,  1] = 0
+  [ 2,  2] = 1
+  [ 2,  3] = 0
+  [ 2,  4] = 0
   ⋮
-  [ 9,  9] = 2
-  [ 9, 11] = 1
-  [10,  6] = 1
-  [10,  7] = 1
-  [10, 10] = 2
-  [10, 11] = 1
-  [10, 12] = 1
-  [11,  8] = 1
-  [11,  9] = 1
-  [11, 10] = 1
-  [11, 11] = 2
-  [11, 12] = 1
-  [12,  3] = 1
-  [12,  4] = 1
-  [12, 10] = 1
-  [12, 11] = 1
-  [12, 12] = 2
+
+  [11,  8] = 0
+  [11,  9] = 0
+  [11, 10] = 0
+  [11, 11] = 1
+  [11, 12] = 0
+  [12,  1] = 0
+  [12,  2] = 0
+  [12,  3] = 0
+  [12,  4] = 0
+  [12,  5] = 0
+  [12,  6] = 0
+  [12,  7] = 0
+  [12,  8] = 0
+  [12,  9] = 0
+  [12, 10] = 0
+  [12, 11] = 0
+  [12, 12] = 1
 ```
 """  
   function getMatrixEE(M1)
  	transposeM1 = transpose(M1)
  	result = mxm(from_matrix(M1), from_matrix(transposeM1))
- 	return result
+ 	return filteringProcedure(M1,result)
   end
 
 """
@@ -368,46 +395,47 @@ julia> matrixM1 = createM1(matrixM2)
 
 julia> getMatrixEF(matrixM1,matrixM2)
 12x6 GBMatrix{Int64} with 48 stored entries:
-  [ 1, 1] = 2
-  [ 1, 2] = 2
-  [ 1, 3] = 1
-  [ 1, 5] = 1
-  [ 2, 1] = 2
-  [ 2, 2] = 1
-  [ 2, 3] = 2
-  [ 2, 6] = 1
-  [ 3, 1] = 2
-  [ 3, 2] = 1
-  [ 3, 5] = 2
-  [ 3, 6] = 1
-  [ 4, 1] = 2
-  [ 4, 3] = 1
-  [ 4, 5] = 1
-  [ 4, 6] = 2
+  [ 1, 1] = 1
+  [ 1, 2] = 1
+  [ 1, 3] = 0
+  [ 1, 4] = 0
+  [ 1, 5] = 0
+  [ 1, 6] = 0
+  [ 2, 1] = 1
+  [ 2, 2] = 0
+  [ 2, 3] = 1
+  [ 2, 4] = 0
+  [ 2, 5] = 0
+  [ 2, 6] = 0
+  [ 3, 1] = 1
+  [ 3, 2] = 0
+  [ 3, 3] = 0
+  [ 3, 4] = 0
   ⋮
-  [ 8, 6] = 1
-  [ 9, 1] = 1
-  [ 9, 3] = 2
-  [ 9, 4] = 1
-  [ 9, 6] = 2
-  [10, 2] = 1
-  [10, 4] = 2
-  [10, 5] = 2
-  [10, 6] = 1
-  [11, 3] = 1
-  [11, 4] = 2
-  [11, 5] = 1
-  [11, 6] = 2
-  [12, 1] = 1
-  [12, 4] = 1
-  [12, 5] = 2
-  [12, 6] = 2
+
+  [10, 2] = 0
+  [10, 3] = 0
+  [10, 4] = 1
+  [10, 5] = 1
+  [10, 6] = 0
+  [11, 1] = 0
+  [11, 2] = 0
+  [11, 3] = 0
+  [11, 4] = 1
+  [11, 5] = 0
+  [11, 6] = 1
+  [12, 1] = 0
+  [12, 2] = 0
+  [12, 3] = 0
+  [12, 4] = 0
+  [12, 5] = 1
+  [12, 6] = 1
 ```
 """  
   function getMatrixEF(M1,M2)
  	transposeM2 = transpose(M2)
  	result = mxm(from_matrix(M1), from_matrix(transposeM2))
- 	return result
+ 	return filteringProcedure(M1,result)
   end
 
 """
@@ -469,46 +497,47 @@ julia> matrixM1 = createM1(matrixM2)
 
 julia> getMatrixFE(matrixM1,matrixM2)
 6x12 GBMatrix{Int64} with 48 stored entries:
-  [1,  1] = 2
-  [1,  2] = 2
-  [1,  3] = 2
-  [1,  4] = 2
-  [1,  5] = 1
-  [1,  7] = 1
-  [1,  9] = 1
-  [1, 12] = 1
-  [2,  1] = 2
-  [2,  2] = 1
-  [2,  3] = 1
-  [2,  5] = 2
-  [2,  6] = 2
-  [2,  7] = 2
-  [2,  8] = 1
-  [2, 10] = 1
+  [1,  1] = 0
+  [1,  2] = 0
+  [1,  3] = 0
+  [1,  4] = 0
+  [1,  5] = 0
+  [1,  6] = 0
+  [1,  7] = 0
+  [1,  8] = 0
+  [1,  9] = 0
+  [1, 10] = 0
+  [1, 11] = 0
+  [1, 12] = 0
+  [2,  1] = 0
+  [2,  2] = 0
+  [2,  3] = 0
+  [2,  4] = 0
   ⋮
-  [4, 12] = 1
-  [5,  1] = 1
-  [5,  3] = 2
-  [5,  4] = 1
-  [5,  6] = 1
-  [5,  7] = 2
-  [5, 10] = 2
-  [5, 11] = 1
-  [5, 12] = 2
-  [6,  2] = 1
-  [6,  3] = 1
-  [6,  4] = 2
-  [6,  8] = 1
-  [6,  9] = 2
-  [6, 10] = 1
-  [6, 11] = 2
-  [6, 12] = 2
+
+  [5,  8] = 0
+  [5,  9] = 0
+  [5, 10] = 0
+  [5, 11] = 0
+  [5, 12] = 0
+  [6,  1] = 0
+  [6,  2] = 0
+  [6,  3] = 0
+  [6,  4] = 0
+  [6,  5] = 0
+  [6,  6] = 0
+  [6,  7] = 0
+  [6,  8] = 0
+  [6,  9] = 0
+  [6, 10] = 0
+  [6, 11] = 0
+  [6, 12] = 0
 ```
 """
   function getMatrixFE(M1,M2)
  	transposeM1 = transpose(M1)
  	result = mxm(from_matrix(M2), from_matrix(transposeM1))
- 	return result
+ 	return filteringProcedure(M2,result)
   end
 
 """
@@ -524,42 +553,47 @@ julia> matrixM2 = createM2([[1, 5, 7, 3], [4, 3, 7, 8], [8, 7, 5, 6],[6, 2, 4, 8
 
 julia> getMatrixFF(matrixM2)
 6x6 GBMatrix{Int64} with 30 stored entries:
-  [1, 1] = 4
-  [1, 2] = 2
-  [1, 3] = 2
-  [1, 5] = 2
-  [1, 6] = 2
-  [2, 1] = 2
-  [2, 2] = 4
-  [2, 3] = 2
-  [2, 4] = 2
-  [2, 5] = 2
-  [3, 1] = 2
-  [3, 2] = 2
-  [3, 3] = 4
-  [3, 4] = 2
-  [3, 6] = 2
-  [4, 2] = 2
-  [4, 3] = 2
-  [4, 4] = 4
-  [4, 5] = 2
-  [4, 6] = 2
-  [5, 1] = 2
-  [5, 2] = 2
-  [5, 4] = 2
-  [5, 5] = 4
-  [5, 6] = 2
-  [6, 1] = 2
-  [6, 3] = 2
-  [6, 4] = 2
-  [6, 5] = 2
-  [6, 6] = 4
+  [1, 1] = 1
+  [1, 2] = 0
+  [1, 3] = 0
+  [1, 4] = 0
+  [1, 5] = 0
+  [1, 6] = 0
+  [2, 1] = 0
+  [2, 2] = 1
+  [2, 3] = 0
+  [2, 4] = 0
+  [2, 5] = 0
+  [2, 6] = 0
+  [3, 1] = 0
+  [3, 2] = 0
+  [3, 3] = 1
+  [3, 4] = 0
+  ⋮
+
+  [4, 2] = 0
+  [4, 3] = 0
+  [4, 4] = 1
+  [4, 5] = 0
+  [4, 6] = 0
+  [5, 1] = 0
+  [5, 2] = 0
+  [5, 3] = 0
+  [5, 4] = 0
+  [5, 5] = 1
+  [5, 6] = 0
+  [6, 1] = 0
+  [6, 2] = 0
+  [6, 3] = 0
+  [6, 4] = 0
+  [6, 5] = 0
+  [6, 6] = 1
 ```
 """
   function getMatrixFF(M2) 
 	 transposeM2 = transpose(M2)
 	 result = mxm(from_matrix(M2), from_matrix(transposeM2))
-	 return result
+ 	 return filteringProcedure(M2, result)
   end
 
   function main()
@@ -614,51 +648,25 @@ julia> getMatrixFF(matrixM2)
     =#
             
     matrixM1 = createM1(matrixM2) 
-  
+	
+	   
     matrixVV = getMatrixVV(matrixM1)
-    println("matrixVV")
-    println(Matrix(matrixVV))
-    println(matrixVV)
-    
     matrixVE = getMatrixVE(matrixM1)
-    println("matrixVE")
-    #println( Matrix(matrixVE))
-    println( matrixVE)
-    
     matrixVF = getMatrixVF(matrixM2)
-    println("matrixVF")
-    #println(Matrix(matrixVF))
-    println(matrixVF)
-    
     matrixEV = getMatrixEV(matrixM1)
-    println("matrixEV")
-    #println( Matrix(matrixEV))
-    println(matrixEV)
-    
     matrixEE = getMatrixEE(matrixM1)
-    println("matrixEE")
-    #println(Matrix(matrixEE))
-    println(matrixEE)
-    
     matrixEF = getMatrixEF(matrixM1, matrixM2)
-    println("matrixEF")
-    #println(Matrix(matrixEF))
-    println(matrixEF)
-    
     matrixFV = getMatrixFV(matrixM2)
-    println("matrixFV")
-    #println(Matrix(matrixFV))
-    println(matrixFV)
-    
-    matrixFE = getMatrixFE(matrixM1, matrixM2)
-    println("matrixFE")
-    #println(Matrix(matrixFE))
-    println(matrixFE)
-    
+    matrixFE = getMatrixFE(matrixM1, matrixM2)  
     matrixFF = getMatrixFF(matrixM2)
-    println("matrixFF")
-    #println(Matrix(matrixFF))
-    println(matrixFF)    
-  end
-
+    
+    println("matrixEV")
+    println(matrixFF)
+    
+   end
+   
+   main()
+   
+   
+   
 end
